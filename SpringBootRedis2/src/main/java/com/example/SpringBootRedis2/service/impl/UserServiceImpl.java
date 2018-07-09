@@ -1,6 +1,11 @@
 package com.example.SpringBootRedis2.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +28,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer getAllUsers() {
-        return jdbcTemplate.queryForObject("select count(1) from USER", Integer.class);
+    @Cacheable(value = { "findUsers" })
+    public String getAllUsers() {
+        return jdbcTemplate.queryForObject("select name from users limit 1 ", String.class);
+    }
+    
+    @Override
+    @Cacheable(value = { "findUsers1" })
+    public String getAllUsers1() {
+        return jdbcTemplate.queryForObject("select name from users limit 1 ", String.class);
     }
 
     @Override

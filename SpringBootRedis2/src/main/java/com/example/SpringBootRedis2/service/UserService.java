@@ -1,4 +1,7 @@
 package com.example.SpringBootRedis2.service;
+
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -17,7 +20,12 @@ public interface UserService {
     /**
      * 获取用户总量
      */
-    Integer getAllUsers();
+    String getAllUsers();
+    
+    /**
+     * 获取用户总量
+     */
+    String getAllUsers1();
 
     /**
      * 删除所有用户
