@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    @Cacheable(value = { "findUsers1" })
+    @CachePut(value = { "findUsers1" })
     public String getAllUsers1() {
         return jdbcTemplate.queryForObject("select name from users limit 1 ", String.class);
     }
