@@ -1,8 +1,6 @@
 package com.example.SpringBootShiro.controller;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.SpringBootShiro.dao.IUserDao;
@@ -41,15 +40,15 @@ public class ShiroController {
     private IUserDao userDao;
 
     @RequestMapping(value="/login",method=RequestMethod.GET)
-    public String loginForm(Model model){
+    public ModelAndView loginForm(Model model){
         model.addAttribute("user", new User());
-        return "login";
+        return new ModelAndView("login");
     }
 
-    @RequestMapping(value="/login",method=RequestMethod.POST)
-    public String login(@Valid User user,BindingResult bindingResult,RedirectAttributes redirectAttributes){
+    @RequestMapping(value="/login.do", method=RequestMethod.POST)
+    public ModelAndView login(User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
-            return "login";
+            return new ModelAndView("login");
         }
 
         String username = user.getUsername();
@@ -84,36 +83,36 @@ public class ShiroController {
         //验证是否登录成功  
         if(currentUser.isAuthenticated()){  
             logger.info("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");  
-            return "redirect:/user";
+            return new ModelAndView("redirect:/user");
         }else{  
             token.clear();  
-            return "redirect:/login";
+            return new ModelAndView("redirect:/login");
         }  
     }
 
     @RequestMapping(value="/logout",method=RequestMethod.GET)  
-    public String logout(RedirectAttributes redirectAttributes ){ 
+    public ModelAndView logout(RedirectAttributes redirectAttributes ){ 
         //使用权限管理工具进行用户的退出，跳出登录，给出提示信息
         SecurityUtils.getSubject().logout();  
         redirectAttributes.addFlashAttribute("message", "您已安全退出");  
-        return "redirect:/login";
+        return new ModelAndView("redirect:/login");
     } 
 
     @RequestMapping("/403")
-    public String unauthorizedRole(){
+    public ModelAndView unauthorizedRole(){
         logger.info("------没有权限-------");
-        return "403";
+        return new ModelAndView("403");
     }
 
     @RequestMapping("/user")
-    public String getUserList(Map<String, Object> model){
+    public ModelAndView getUserList(Map<String, Object> model){
         model.put("userList", userDao.findAll());
-        return "user";
+        return new ModelAndView("user", model);
     }
 
     @RequestMapping("/user/edit/{userid}")
-    public String getUserList(@PathVariable int userid){
+    public ModelAndView getUserList(@PathVariable int userid){
         logger.info("------进入用户信息修改-------");
-        return "user_edit";
+        return new ModelAndView("user_edit");
     }
 }

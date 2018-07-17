@@ -8,16 +8,12 @@
 
 <body>
     <h1>登录页面----${message }</h1>
-    <img alt="" src="${pageContext.request.contextPath }/pic.jpg">
-    <form:form action="${pageContext.request.contextPath }/login"
-        commandName="user" method="post">
-        用户名：<form:input path="username" />
-        <form:errors path="username" cssClass="error" />
+    <%-- <img alt="" src="${pageContext.request.contextPath }/pic.jpg"> --%>
+    <form id='login' action="${pageContext.request.contextPath }/login.do" method="post" style="padding-top:5px;">
+        用户名：<input name="username"   id="username" >
         <br />
-        密码：<form:password path="password" />
-        <form:errors path="password" cssClass="error" />
-        <br />
-        <form:button name="button">提交</form:button>
-    </form:form>
+        密码：<input name="password"   id="password"  >
+        <input id="addPaSub" type="submit" value="提交"/>
+    </form>
 </body>
 </html>
